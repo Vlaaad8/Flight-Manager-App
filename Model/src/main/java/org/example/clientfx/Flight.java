@@ -1,12 +1,22 @@
 package org.example.clientfx;
 
+import jakarta.persistence.Column;
+import jakarta.persistence.Table;
+
 import java.time.LocalDateTime;
 
+@jakarta.persistence.Entity
+@Table(name="flights")
 public class Flight extends Entity<Integer> {
+    @Column(nullable = false)
     private String origin;
+    @Column(nullable = false)
     private String departure;
+    @Column(nullable = false)
     private int availableSeats;
+    @Column(nullable = false)
     private String airport;
+    @Column(nullable = false)
     private LocalDateTime daytime;
 
     public Flight(String origin, String departure, int availableSeats, String airport, LocalDateTime daytime) {
@@ -15,6 +25,9 @@ public class Flight extends Entity<Integer> {
         this.availableSeats = availableSeats;
         this.airport = airport;
         this.daytime = daytime;
+    }
+    public Flight(){
+
     }
 
     public String getOrigin() {

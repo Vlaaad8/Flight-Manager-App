@@ -1,7 +1,11 @@
-package org.example.clientfx;
+package org.example.clientfx.Old;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.example.clientfx.Flight;
+import org.example.clientfx.FlightRepository;
+import org.example.clientfx.Ticket;
+import org.example.clientfx.TicketRepository;
 import org.example.clientfx.utils.JdbcUtils;
 
 import java.sql.Connection;
@@ -24,7 +28,7 @@ public class TicketDBRepository implements TicketRepository {
     public Optional<Ticket> add(Ticket entity) {
         logger.traceEntry("Saving the ticket {}", entity);
         Connection connection = dbUtils.getConnection();
-        try (PreparedStatement preparedStatement = connection.prepareStatement("insert into tickets(flightId, numberOfTickets, buyers) values(?,?,?)")) {
+        try (PreparedStatement preparedStatement = connection.prepareStatement("insert into ticketsold(flightId, numberOfTickets, buyers) values(?,?,?)")) {
             preparedStatement.setInt(1, entity.getFlight().getId());
             preparedStatement.setInt(2, entity.getNumberOfTickets());
             preparedStatement.setString(3, entity.getBuyer());
@@ -43,7 +47,7 @@ public class TicketDBRepository implements TicketRepository {
     public Optional<Ticket> delete(Ticket entity) {
         logger.traceEntry("Deleting the ticket {}", entity);
         Connection connection = dbUtils.getConnection();
-        try (PreparedStatement preparedStatement = connection.prepareStatement("delete from tickets where id= ?")) {
+        try (PreparedStatement preparedStatement = connection.prepareStatement("delete from ticketsold where id= ?")) {
             preparedStatement.setInt(1, entity.getId());
             int result = preparedStatement.executeUpdate();
             if (result > 0) {
@@ -63,7 +67,7 @@ public class TicketDBRepository implements TicketRepository {
         logger.traceEntry("Updating the ticket {}", entity);
 
 
-        try (PreparedStatement preparedStatement = connection.prepareStatement("update tickets set flightId=?,buyers=?,numberOfTickets=? where id = ?")) {
+        try (PreparedStatement preparedStatement = connection.prepareStatement("update ticketsold set flightId=?,buyers=?,numberOfTickets=? where id = ?")) {
             preparedStatement.setInt(1, entity.getFlight().getId());
             preparedStatement.setString(2, entity.getBuyer());
             preparedStatement.setInt(3, entity.getNumberOfTickets());
@@ -84,7 +88,7 @@ public class TicketDBRepository implements TicketRepository {
     public Optional<Ticket> findById(Integer integer) {
         logger.traceEntry("Finding the ticket by id {}", integer);
         Connection connection = dbUtils.getConnection();
-        try (PreparedStatement preparedStatement = connection.prepareStatement("select * from tickets where id = ?")) {
+        try (PreparedStatement preparedStatement = connection.prepareStatement("select * from ticketsold where id = ?")) {
             preparedStatement.setInt(1, integer);
             try (ResultSet resultSet = preparedStatement.executeQuery()) {
                 resultSet.next();
@@ -110,7 +114,7 @@ public class TicketDBRepository implements TicketRepository {
         logger.traceEntry("Finding all tickets");
         List<Ticket> tickets = new ArrayList<>();
         Connection connection = dbUtils.getConnection();
-        try (PreparedStatement preparedStatement = connection.prepareStatement("select * from tickets")) {
+        try (PreparedStatement preparedStatement = connection.prepareStatement("select * from ticketsold")) {
             try (ResultSet resultSet = preparedStatement.executeQuery()) {
                 while (resultSet.next()) {
                     int id = resultSet.getInt("id");

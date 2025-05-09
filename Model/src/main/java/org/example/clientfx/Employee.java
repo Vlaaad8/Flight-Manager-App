@@ -1,9 +1,18 @@
 package org.example.clientfx;
 
+import jakarta.persistence.Column;
+import jakarta.persistence.Table;
+
+@jakarta.persistence.Entity
+@Table(name="employees")
 public class Employee extends Entity<Integer> {
+    @Column(nullable = false)
     private String user;
+    @Column(nullable = false)
     private String password;
+    @Column(nullable = false)
     private String firstName;
+    @Column(nullable = false)
     private String lastName;
 
     public Employee(String user, String password, String firstName, String lastName) {
@@ -11,6 +20,8 @@ public class Employee extends Entity<Integer> {
         this.password = password;
         this.firstName = firstName;
         this.lastName = lastName;
+    }
+    public Employee(){
     }
 
     public String getUser() {

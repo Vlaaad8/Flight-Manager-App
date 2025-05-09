@@ -1,5 +1,12 @@
 package org.example.clientfx;
 
+import org.example.clientfx.Hibernate.EmployeeRepositoryH;
+import org.example.clientfx.Hibernate.FlightRepositoryH;
+import org.example.clientfx.Hibernate.TicketRepositoryH;
+import org.example.clientfx.Old.EmployeeDBRepository;
+import org.example.clientfx.Old.FlightDBRepository;
+import org.example.clientfx.Old.TicketDBRepository;
+
 import java.util.Properties;
 
 public class StartServerRPC {
@@ -13,9 +20,9 @@ public class StartServerRPC {
         } catch (Exception e) {
             return;
         }
-        EmployeeRepository employeeRepository = new EmployeeDBRepository(serverProperties);
-        FlightRepository flightRepository = new FlightDBRepository(serverProperties);
-        TicketRepository ticketRepository = new TicketDBRepository(serverProperties, flightRepository);
+        EmployeeRepository employeeRepository = new EmployeeRepositoryH();
+        FlightRepository flightRepository = new FlightRepositoryH();
+        TicketRepository ticketRepository = new TicketRepositoryH();
         IServices services = new ServicesImplementation(employeeRepository, flightRepository, ticketRepository);
         int chatServerPort = defaultPort;
         try {
