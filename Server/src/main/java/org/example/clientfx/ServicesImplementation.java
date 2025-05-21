@@ -86,7 +86,7 @@ public class ServicesImplementation implements IServices {
     @Override
     public List<Flight> searchFlight(Flight flight) {
         System.out.println("Serverul a intrat in metoda searchFlight");
-        LocalDateTime localDateTime = flight.getDayTime();
+        LocalDateTime localDateTime = flight.getDaytime();
         List<Flight> flights = flightRepository.findByDestination(flight.getOrigin(), flight.getDeparture(), Date.from(localDateTime.atZone(ZoneId.systemDefault()).toInstant()));
         return flights;
     }

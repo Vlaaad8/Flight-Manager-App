@@ -1,22 +1,25 @@
-package org.example.clientfx.Old;
+package org.example.clientfx.SpringData;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.example.clientfx.Flight;
 import org.example.clientfx.FlightRepository;
 import org.example.clientfx.utils.JdbcUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import java.sql.*;
 import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.*;
 
-
-public class FlightDBRepository implements FlightRepository {
+@Component
+public class FlightDBRepositoryS implements FlightRepository {
     private static JdbcUtils dbUtils;
     private static final Logger logger= LogManager.getLogger();
 
-    public FlightDBRepository(Properties properties) {
+    @Autowired
+    public FlightDBRepositoryS(Properties properties) {
         dbUtils = new JdbcUtils(properties);
     }
 
@@ -26,7 +29,7 @@ public class FlightDBRepository implements FlightRepository {
         List<Flight> flights = new ArrayList<>();
 
         Connection connection = dbUtils.getConnection();
-        try(PreparedStatement preparedStatement=connection.prepareStatement("select * from flightsOLD where availableSeats> 0")){
+        try(PreparedStatement preparedStatement=connection.prepareStatement("select * from flights where availableSeats> 0")){
             try(ResultSet resultSet=preparedStatement.executeQuery()){
                 while(resultSet.next()){
                     int id = resultSet.getInt("id");
@@ -54,7 +57,7 @@ public class FlightDBRepository implements FlightRepository {
         logger.traceEntry("Searching for a flight from {} to {}, at the date {}",origin,departure,departureDate);
         List<Flight> flights=new ArrayList<>();
         Connection connection=dbUtils.getConnection();
-        try(PreparedStatement preparedStatement=connection.prepareStatement("select * from flightsOLD where origin=? and departure=? and DATE(dayTime)=? and availableSeats>0")){
+        try(PreparedStatement preparedStatement=connection.prepareStatement("select * from flights where origin=? and departure=? and DATE(dayTime)=? and availableSeats>0")){
             preparedStatement.setString(1,origin);
             preparedStatement.setString(2,departure);
             preparedStatement.setDate(3,new java.sql.Date(departureDate.getTime()));
@@ -81,15 +84,22 @@ public class FlightDBRepository implements FlightRepository {
     public Optional<Flight> add(Flight entity) {
         logger.traceEntry("Adding a new flight {}", entity.toString());
         Connection connection = dbUtils.getConnection();
-        try (PreparedStatement preparedStatement = connection.prepareStatement("insert into flightsOLD(origin,departure,availableSeats,airport,dayTime) values(?,?,?,?,?)")) {
+        try (PreparedStatement preparedStatement = connection.prepareStatement("insert into flights(origin,departure,availableSeats,airport,daytime) values(?,?,?,?,?)",Statement.RETURN_GENERATED_KEYS)) {
             preparedStatement.setString(1, entity.getOrigin());
             preparedStatement.setString(2, entity.getDeparture());
             preparedStatement.setInt(3, entity.getAvailableSeats());
             preparedStatement.setString(4, entity.getAirport());
+            System.out.println(entity.getDaytime());
             preparedStatement.setTimestamp(5, Timestamp.valueOf(entity.getDaytime()));
 
             int resultSet = preparedStatement.executeUpdate();
             if (resultSet > 0) {
+                ResultSet rs = preparedStatement.getGeneratedKeys();
+                if (rs.next()) {
+                    int id=rs.getInt(1);
+                    entity.setId(id);
+                    logger.trace("Generated id {} ",id);
+                }
                 logger.traceExit(entity.toString());
                 return Optional.of(entity);
             }
@@ -105,7 +115,7 @@ public class FlightDBRepository implements FlightRepository {
     public Optional<Flight> delete(Flight entity) {
         logger.traceEntry("Deleting a flight {}", entity.toString());
         Connection connection = dbUtils.getConnection();
-        try (PreparedStatement preparedStatement = connection.prepareStatement("delete from flightsOLD where id=?")) {
+        try (PreparedStatement preparedStatement = connection.prepareStatement("delete from flights where id=?")) {
             preparedStatement.setInt(1, entity.getId());
             int resultSet = preparedStatement.executeUpdate();
             if (resultSet > 0) {
@@ -116,14 +126,14 @@ public class FlightDBRepository implements FlightRepository {
             logger.error(e);
             System.err.println(e);
         }
+        System.out.println("Am ajuns aici");
         logger.traceExit();
         return Optional.empty();
     }
-
     @Override
     public Optional<Flight> update(Integer integer, Flight entity) {
         Connection connection=dbUtils.getConnection();
-        try(PreparedStatement preparedStatement=connection.prepareStatement("update flightsOLD set availableSeats= ? where id =?")){
+        try(PreparedStatement preparedStatement=connection.prepareStatement("update flights set availableSeats= ? where id =?")){
             preparedStatement.setInt(1,entity.getAvailableSeats());
             preparedStatement.setInt(2,integer);
             int result = preparedStatement.executeUpdate();
@@ -141,7 +151,7 @@ public class FlightDBRepository implements FlightRepository {
     public Optional<Flight> findById(Integer integer) {
         logger.traceEntry("Finding flight by id {}", integer);
         Connection connection = dbUtils.getConnection();
-        try (PreparedStatement preparedStatement = connection.prepareStatement("select * from flightsOLD where id=?")) {
+        try (PreparedStatement preparedStatement = connection.prepareStatement("select * from flights where id=?")) {
             preparedStatement.setInt(1, integer);
             try (ResultSet resultSet = preparedStatement.executeQuery()) {
                 while (resultSet.first()) {
@@ -169,7 +179,7 @@ public class FlightDBRepository implements FlightRepository {
         logger.traceEntry("Finding all flights");
         List<Flight> flights = new ArrayList<>();
         Connection connection = dbUtils.getConnection();
-        try (PreparedStatement preparedStatement = connection.prepareStatement("select * from flightsOLD")) {
+        try (PreparedStatement preparedStatement = connection.prepareStatement("select * from flights")) {
             try (ResultSet resultSet = preparedStatement.executeQuery()) {
                 while (resultSet.next()) {
                     int id = resultSet.getInt("id");
@@ -200,7 +210,7 @@ public class FlightDBRepository implements FlightRepository {
     public Set<String> getOrigins(){
         Connection connection = dbUtils.getConnection();
         Set<String> origins = new HashSet<>();
-        try(PreparedStatement preparedStatement=connection.prepareStatement("select distinct flightsOLD.origin from flightsOLD")){
+        try(PreparedStatement preparedStatement=connection.prepareStatement("select distinct flights.origin from flights")){
             try(ResultSet resultSet= preparedStatement.executeQuery()){
                 while(resultSet.next()){
                     String origin = resultSet.getString("origin");
@@ -218,7 +228,7 @@ public class FlightDBRepository implements FlightRepository {
 public Set<String> getDepartures(){
     Connection connection = dbUtils.getConnection();
     Set<String> origins = new HashSet<>();
-    try(PreparedStatement preparedStatement=connection.prepareStatement("select distinct departure from flightsOLD")){
+    try(PreparedStatement preparedStatement=connection.prepareStatement("select distinct departure from flights")){
         try(ResultSet resultSet= preparedStatement.executeQuery()){
             while(resultSet.next()){
                 String origin = resultSet.getString("departure");

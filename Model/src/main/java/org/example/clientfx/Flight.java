@@ -16,7 +16,7 @@ public class Flight extends Entity<Integer> {
     private int availableSeats;
     @Column(nullable = false)
     private String airport;
-    @Column(nullable = false)
+    @Column(nullable = false,columnDefinition ="TIMESTAMP")
     private LocalDateTime daytime;
 
     public Flight(String origin, String departure, int availableSeats, String airport, LocalDateTime daytime) {
@@ -62,11 +62,11 @@ public class Flight extends Entity<Integer> {
         this.airport = airport;
     }
 
-    public LocalDateTime getDayTime() {
+    public LocalDateTime getDaytime() {
         return daytime;
     }
 
-    public void setDaytime(LocalDateTime daytime) {
+    public void setdayTime(LocalDateTime daytime) {
         this.daytime = daytime;
     }
 

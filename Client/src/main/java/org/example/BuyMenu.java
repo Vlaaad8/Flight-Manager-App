@@ -1,6 +1,5 @@
 package org.example;
 
-import javafx.application.Platform;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -61,7 +60,7 @@ public class BuyMenu implements IObserver {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
         timeColumn.setCellValueFactory(cellData -> {
-            LocalDateTime dateTime = cellData.getValue().getDayTime(); // Directly get LocalDateTime
+            LocalDateTime dateTime = cellData.getValue().getDaytime(); // Directly get LocalDateTime
             String formattedTime = (dateTime != null) ? dateTime.format(formatter) : "";
             return new SimpleStringProperty(formattedTime);
         });

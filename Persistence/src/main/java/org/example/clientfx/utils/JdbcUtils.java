@@ -17,9 +17,9 @@ public class JdbcUtils {
     }
 
     private Connection getNewConnection() {
-        String url = jdbcProps.getProperty("server.jdbc.url");
-        String user = jdbcProps.getProperty("server.jdbc.user");
-        String pass = jdbcProps.getProperty("server.jdbc.password");
+        String url = jdbcProps.getProperty("jdbc.url");
+        String user = jdbcProps.getProperty("jdbc.user");
+        String pass = jdbcProps.getProperty("jdbc.password");
         System.out.println("Connecting to "+user+" "+pass+" "+url);
         Connection con = null;
         try {
