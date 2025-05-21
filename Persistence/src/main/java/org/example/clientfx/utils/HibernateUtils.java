@@ -6,6 +6,7 @@ import org.example.clientfx.Ticket;
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
 
+
 public class HibernateUtils {
 
     private static SessionFactory sessionFactory;

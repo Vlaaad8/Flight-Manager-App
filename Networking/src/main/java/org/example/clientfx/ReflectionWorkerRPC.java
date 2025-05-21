@@ -8,14 +8,12 @@ import org.example.clientfx.DTO.TicketDTO;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.io.Reader;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
-import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
 
@@ -115,7 +113,7 @@ public class ReflectionWorkerRPC implements Runnable, IObserver {
                     .toList();
             List<FlightDTO> flights = new ArrayList<>();
             allFlights.forEach(flight -> {
-                flights.add(new FlightDTO(flight.getId(), flight.getOrigin(), flight.getDeparture(), flight.getDayTime(), flight.getAvailableSeats(), flight.getAirport()));
+                flights.add(new FlightDTO(flight.getId(), flight.getOrigin(), flight.getDeparture(), flight.getDaytime(), flight.getAvailableSeats(), flight.getAirport()));
             });
             System.out.println(flights.size());
             return (new Response.Builder()).type(ResponseType.RECEIVE_FLIGHTS).data(flights).build();
@@ -149,7 +147,7 @@ public class ReflectionWorkerRPC implements Runnable, IObserver {
                     .toList();
             List<FlightDTO> flights = new ArrayList<FlightDTO>();
             allFlights.forEach(flight -> {
-                flights.add(new FlightDTO(flight.getId(), flight.getOrigin(), flight.getDeparture(), flight.getDayTime(), flight.getAvailableSeats(), flight.getAirport()));
+                flights.add(new FlightDTO(flight.getId(), flight.getOrigin(), flight.getDeparture(), flight.getDaytime(), flight.getAvailableSeats(), flight.getAirport()));
             });
             return (new Response.Builder()).type(ResponseType.RECEIVE_SEARCH).data(flights).build();
         }

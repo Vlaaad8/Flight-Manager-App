@@ -43,7 +43,7 @@ public class DTOUtils {
         String origin = dto.getOrigin();
         String departure = dto.getDeparture();
         String airport = dto.getAirport();
-        LocalDateTime dayTime = dto.getDayTime();
+        LocalDateTime dayTime = dto.getDaytime();
         int availableSeats = dto.getAvailableSeats();
         FlightDTO flight = new FlightDTO(id,origin, departure, dayTime,availableSeats, airport);
         return flight;

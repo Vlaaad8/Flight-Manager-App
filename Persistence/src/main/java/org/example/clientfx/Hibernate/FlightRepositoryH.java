@@ -6,8 +6,10 @@ import org.example.clientfx.FlightRepository;
 import org.example.clientfx.utils.HibernateUtils;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
+import org.springframework.stereotype.Component;
 
 import java.util.*;
+
 
 public class FlightRepositoryH implements FlightRepository {
     @Override

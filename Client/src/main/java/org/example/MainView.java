@@ -7,7 +7,6 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.fxml.Initializable;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
@@ -17,14 +16,12 @@ import org.example.clientfx.*;
 
 
 import java.io.IOException;
-import java.net.URL;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.List;
-import java.util.ResourceBundle;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
@@ -73,7 +70,7 @@ public class MainView implements IObserver {
 
         // Convert Timestamp to a formatted String in the TableColumn
         timeColumn.setCellValueFactory(cellData -> {
-            LocalDateTime dateTime = cellData.getValue().getDayTime(); // Directly get LocalDateTime
+            LocalDateTime dateTime = cellData.getValue().getDaytime(); // Directly get LocalDateTime
             String formattedTime = (dateTime != null) ? dateTime.format(formatter) : "";
             return new SimpleStringProperty(formattedTime);
         });
