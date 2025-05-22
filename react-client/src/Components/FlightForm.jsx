@@ -1,5 +1,5 @@
 import {useState} from "react";
-import "./FlightForm.css";
+import "../CSS/FlightForm.css";
 
 export default function FlightForm({addFunc}) {
     const [origin, setOrigin] = useState("");
