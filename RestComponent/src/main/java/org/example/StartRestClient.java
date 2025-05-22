@@ -1,6 +1,7 @@
 package org.example;
 
 import org.example.clientfx.Flight;
+import org.example.client.FlightClient;
 
 import java.time.LocalDateTime;
 
