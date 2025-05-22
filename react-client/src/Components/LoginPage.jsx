@@ -1,4 +1,5 @@
 import {useState} from "react";
+import '../CSS/LoginPage.css'
 
 function LoginPage({loginFunction}) {
     const [username, setUsername] = useState('');
@@ -13,6 +14,7 @@ function LoginPage({loginFunction}) {
     }
 
     return (
+
         <form className="card-form" onSubmit={handleSubmit}>
             {/** Username **/}
             <div className="input">

@@ -1,7 +1,7 @@
  import {Component, useEffect, useState} from "react";
- import {GetFlights} from "./utils/RestCalls.js";
- import './FlightTable.css'
- import './App.css'
+ import {GetFlights} from "../utils/RestCalls.js";
+ import '../CSS/FlightTable.css'
+ import '../CSS/App.css'
  function FlightRow({flight,deleteFunction,updateFunction}) {
      const [seats,setSeats] = useState(flight.availableSeats);
      function handleDelete(){

@@ -29,7 +29,7 @@ public class EmployeeDBRepositoryS implements EmployeeRepository {
     public Optional<Employee> login(String user, String password) {
         logger.traceEntry("Finding employee by user and password {}, {}", user, password);
         Connection connection = dbUtils.getConnection();
-        try (PreparedStatement ps = connection.prepareStatement("select * from employeesOld where user = ? and password = ?")) {
+        try (PreparedStatement ps = connection.prepareStatement("select * from employees where user = ? and password = ?")) {
             ps.setString(1, user);
             ps.setString(2, password);
             try (ResultSet rs = ps.executeQuery()) {
@@ -54,7 +54,7 @@ public class EmployeeDBRepositoryS implements EmployeeRepository {
     public Optional<Employee> add(Employee entity) {
         logger.traceEntry("Adding employee {}", entity);
         Connection connection = dbUtils.getConnection();
-        try (PreparedStatement preparedStatement = connection.prepareStatement("insert into employeesOld(user,password,firstName,lastName) VALUES(?,?,?,?)")) {
+        try (PreparedStatement preparedStatement = connection.prepareStatement("insert into employees(user,password,firstName,lastName) VALUES(?,?,?,?)")) {
             preparedStatement.setString(1, entity.getUser());
             preparedStatement.setString(2, entity.getPassword());
             preparedStatement.setString(3, entity.getFirstName());
@@ -76,7 +76,7 @@ public class EmployeeDBRepositoryS implements EmployeeRepository {
     public Optional<Employee> delete(Employee entity) {
         logger.traceEntry("Deleting employee {}", entity);
         Connection connection = dbUtils.getConnection();
-        try(PreparedStatement preparedStatement=connection.prepareStatement("delete from employeesOld where id = ?")){
+        try(PreparedStatement preparedStatement=connection.prepareStatement("delete from employees where id = ?")){
             preparedStatement.setInt(1,entity.getId());
             int result=preparedStatement.executeUpdate();
             if(result>0){
@@ -95,7 +95,7 @@ public class EmployeeDBRepositoryS implements EmployeeRepository {
     public Optional<Employee> update(Integer integer, Employee entity) {
         logger.traceEntry("Updating employee {}", entity);
         Connection connection = dbUtils.getConnection();
-        try(PreparedStatement preparedStatement=connection.prepareStatement("update employeesOld set \"user\"=?,\"password\"=?,firstName=?,lastName=? where id=?")){
+        try(PreparedStatement preparedStatement=connection.prepareStatement("update employees set \"user\"=?,\"password\"=?,firstName=?,lastName=? where id=?")){
             preparedStatement.setString(1, entity.getUser());
             preparedStatement.setString(2, entity.getPassword());
             preparedStatement.setString(3, entity.getFirstName());
@@ -119,7 +119,7 @@ public class EmployeeDBRepositoryS implements EmployeeRepository {
     public Optional<Employee> findById(Integer integer) {
         logger.traceEntry("Finding employee by id {}", integer);
         Connection connection = dbUtils.getConnection();
-        try(PreparedStatement preparedStatement=connection.prepareStatement("select * from employeesOld where id=?")) {
+        try(PreparedStatement preparedStatement=connection.prepareStatement("select * from employees where id=?")) {
             preparedStatement.setInt(1, integer);
             try (ResultSet resultSet = preparedStatement.executeQuery()) {
                 while (resultSet.next()) {
@@ -146,7 +146,7 @@ public class EmployeeDBRepositoryS implements EmployeeRepository {
         logger.traceEntry("Finding all employees");
         List<Employee> employees = new ArrayList<>();
         Connection connection = dbUtils.getConnection();
-        try(PreparedStatement preparedStatement=connection.prepareStatement("select * from employeesOld")){
+        try(PreparedStatement preparedStatement=connection.prepareStatement("select * from employees")){
             try(ResultSet resultSet=preparedStatement.executeQuery()){
                 while(resultSet.next()){
                     int id= resultSet.getInt("id");

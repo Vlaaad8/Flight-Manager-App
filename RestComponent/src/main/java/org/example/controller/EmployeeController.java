@@ -12,6 +12,7 @@ import java.util.Date;
 @RestController
 @RequestMapping("ryanair/login")
 @CrossOrigin(origins="http://localhost:5174")
+
 public class EmployeeController {
     private static final long EXPIRATION_TIME=360000;
 
