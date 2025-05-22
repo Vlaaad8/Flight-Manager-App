@@ -1,18 +1,21 @@
 import './App.css'
 import './utils/RestCalls.js'
 import {useEffect, useState} from "react";
-import {AddFlight, DeleteFlight, GetFlights, UpdateFlight} from "./utils/RestCalls.js";
+import {AddFlight, DeleteFlight, GetFlights, Login, UpdateFlight} from "./utils/RestCalls.js";
 import FlightTable from "./FlightTable.jsx";
 import FlightForm from "./FlightForm.jsx";
+import LoginPage from "./LoginPage.jsx";
 
 function App() {
     const [flights, setFlights] = useState([]);
+    const [token,setToken] = useState("");
 
     async function addFunction(flight) {
         try {
-            await AddFlight(flight);
+            console.log("Din addFunction a plecat cu urmatorul token:" +token);
+            await AddFlight(flight,token);
 
-            const data = await GetFlights();
+            const data = await GetFlights(token);
             setFlights(data);
         } catch (err) {
             console.error(err)
@@ -21,8 +24,8 @@ function App() {
 
     async function DeleteFunction(id) {
         try {
-            await DeleteFlight(id)
-            const data = await GetFlights();
+            await DeleteFlight(id,token)
+            const data = await GetFlights(token);
             setFlights(data);
         } catch (err) {
             console.error(err)
@@ -32,33 +35,48 @@ function App() {
     }
     async function UpdateFunction(flight){
         try{
-            console.log("I am here")
-            await UpdateFlight(flight);
-            console.log("I am here 2")
-            const data=await GetFlights();
+            await UpdateFlight(flight,token);
+            const data=await GetFlights(token);
             setFlights(data);
         }catch(err){
             console.error(err)
         }
     }
-
+    async function LoginEmployee(username,password){
+        try{
+            let newToken=await Login(username,password);
+            setToken(newToken);
+        }
+        catch(err){
+            console.error(err);
+        }
+    }
     useEffect(() => {
-        GetFlights().then(data => {
+        console.log(token)
+        GetFlights(token).then(data => {
             setFlights(data);
         })
             .catch(error => {
                 console.log(error)
             })
     }, []);
+    if(token) {
+        return (
+            <>  <h1>Ryanair - revolutionary aviation</h1>
+                <div className="FlightDiv">
+                    <div>{<FlightForm addFunc={addFunction}/>}</div>
+                    <div><FlightTable flights={flights} deleteFunction={DeleteFunction}
+                                      updateFunction={UpdateFunction}/></div>
+                </div>
+            </>
+        )
+    }
+        return(
+            <>
+                {<LoginPage loginFunction={LoginEmployee}/>}
+            </>
+        )
 
-    return (
-        <>  <h1>Ryanair - revolutionary aviation</h1>
-            <div className="FlightDiv">
-                <div>{<FlightForm addFunc={addFunction}/>}</div>
-                <div><FlightTable flights={flights} deleteFunction={DeleteFunction} updateFunction={UpdateFunction}/></div>
-            </div>
-        </>
-    )
 }
 
 export default App
