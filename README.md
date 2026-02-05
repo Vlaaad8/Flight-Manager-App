@@ -134,6 +134,5 @@ Flight-Manager-App/
 
 ---
 
----
 
 **⭐ Dacă proiectul ți-a fost util, lasă un star!**
